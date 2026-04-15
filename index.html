@@ -116,6 +116,60 @@
             padding: 120px 40px 80px;
             overflow: hidden;
         }
+        /* ========== GRADIENT ORBS ========== */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(74, 144, 217, 0.15), transparent 70%);
+            border-radius: 50%;
+            animation: float-orb-1 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(135, 206, 235, 0.12), transparent 70%);
+            border-radius: 50%;
+            animation: float-orb-2 25s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .orb-3 {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(74, 144, 217, 0.08), transparent 70%);
+            border-radius: 50%;
+            animation: float-orb-3 18s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes float-orb-1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(80px, -60px) scale(1.1); }
+            50% { transform: translate(-40px, 80px) scale(0.95); }
+            75% { transform: translate(60px, 40px) scale(1.05); }
+        }
+        @keyframes float-orb-2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-70px, 50px) scale(1.08); }
+            66% { transform: translate(50px, -70px) scale(0.92); }
+        }
+        @keyframes float-orb-3 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-60px, -40px) scale(1.15); }
+        }
         #particle-canvas {
             position: absolute;
             top: 0;
@@ -123,12 +177,15 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
+            z-index: 1;
+            will-change: transform;
         }
         .hero-content {
             position: relative;
             z-index: 2;
             text-align: center;
             max-width: 800px;
+            will-change: transform, opacity;
         }
         .hero-badge {
             display: inline-flex;
@@ -182,8 +239,7 @@
             max-width: 560px;
             margin: 0 auto 32px;
             line-height: 1.7;
-            animation: fadeInUp 0.6s ease 0.2s forwards;
-            opacity: 0;
+            opacity: 1;
         }
         .hero-buttons {
             display: flex;
@@ -318,6 +374,7 @@
             overflow: hidden;
             cursor: pointer;
             transition: transform 0.3s ease;
+            will-change: transform;
         }
         .featured-card:hover {
             transform: scale(1.01);
@@ -474,6 +531,8 @@
             gap: 24px;
         }
         .feature-card {
+            --mouse-x: 50%;
+            --mouse-y: 50%;
             background: #fff;
             border-radius: 20px;
             padding: 36px;
@@ -484,10 +543,29 @@
             transform: translateY(30px);
             position: relative;
             overflow: hidden;
+            will-change: transform;
         }
         .feature-card.visible {
             opacity: 1;
             transform: translateY(0);
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 20px;
+            background: radial-gradient(
+                300px circle at var(--mouse-x) var(--mouse-y),
+                rgba(74, 144, 217, 0.08),
+                transparent 70%
+            );
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 0;
         }
         .feature-card::after {
             content: '';
@@ -499,12 +577,14 @@
             background: linear-gradient(90deg, #4A90D9, #87CEEB);
             opacity: 0;
             transition: opacity 0.3s ease;
+            z-index: 1;
         }
+        .feature-card > * { position: relative; z-index: 2; }
         .feature-card:hover {
-            transform: translateY(-6px) !important;
             box-shadow: 0 20px 60px rgba(30, 58, 95, 0.12);
             border-color: rgba(74, 144, 217, 0.15);
         }
+        .feature-card:hover::before { opacity: 1; }
         .feature-card:hover::after { opacity: 1; }
         .feature-icon {
             width: 56px;
@@ -561,6 +641,13 @@
         }
         .stat-item {
             text-align: center;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .stat-item.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
         .stat-number {
             font-size: clamp(36px, 5vw, 56px);
@@ -631,6 +718,7 @@
             opacity: 0;
             transform: translateX(30px);
             transition: all 0.6s ease;
+            will-change: transform, opacity;
         }
         .code-block-wrapper.visible {
             opacity: 1;
@@ -830,6 +918,45 @@
             from { opacity: 0; transform: translateY(24px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        /* ========== SMOOTH SECTION TRANSITIONS ========== */
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-60px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(60px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-up.visible,
+        .reveal-left.visible,
+        .reveal-right.visible,
+        .reveal-scale.visible {
+            opacity: 1;
+            transform: translate(0) scale(1);
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4A90D9, #87CEEB);
+            z-index: 1001;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
 
         /* ========== MOBILE NAV ========== */
         .mobile-toggle {
@@ -881,6 +1008,14 @@
             .footer-grid { grid-template-columns: 1fr; gap: 32px; }
             .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
         }
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
 
         /* ========== MOBILE NAV MENU ========== */
         .mobile-menu {
@@ -924,12 +1059,12 @@
         }
     </style>
 </head>
-<body>
+<body id="top">
 
     <!-- NAV -->
     <nav class="nav" id="nav">
         <div class="nav-inner">
-            <a href="#" class="nav-brand">
+            <a href="#top" class="nav-brand">
                 <img src="https://docs.asgrefinery.io/img/logo.png" alt="ASG Refinery" onerror="this.style.display='none'">
                 ASG REFINERY
             </a>
@@ -937,7 +1072,7 @@
                 <a href="#how" class="active">How It Works</a>
                 <a href="#features">Features</a>
                 <a href="#developers">Developers</a>
-                <a href="https://docs.asgrefinery.io" target="_blank">Docs</a>
+                <a href="https://docs.asgrefinery.io" target="_blank" rel="noopener noreferrer">Docs</a>
             </div>
             <div class="nav-cta">
                 <a href="https://console.asgrefinery.io" class="btn-secondary">Sign in</a>
@@ -955,12 +1090,13 @@
         <a href="#how" onclick="this.parentElement.classList.remove('open')">How It Works</a>
         <a href="#features" onclick="this.parentElement.classList.remove('open')">Features</a>
         <a href="#developers" onclick="this.parentElement.classList.remove('open')">Developers</a>
-        <a href="https://docs.asgrefinery.io" target="_blank">Docs</a>
+        <a href="https://docs.asgrefinery.io" target="_blank" rel="noopener noreferrer">Docs</a>
         <a href="https://console.asgrefinery.io" class="hero-btn hero-btn-primary" style="margin-top:24px">Get Started</a>
     </div>
 
     <!-- HERO -->
     <section class="hero">
+        <div class="orb orb-3"></div>
         <canvas id="particle-canvas"></canvas>
         <div class="hero-content">
             <div class="hero-badge">
@@ -974,7 +1110,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
                     Start Labeling
                 </a>
-                <a href="https://docs.asgrefinery.io" class="hero-btn hero-btn-outline" target="_blank">
+                <a href="https://docs.asgrefinery.io" class="hero-btn hero-btn-outline" target="_blank" rel="noopener noreferrer">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                     Read the Docs
                 </a>
@@ -999,8 +1135,8 @@
                 <h3>Submit Once, Scale Forever</h3>
                 <p>Batch upload thousands of labeling tasks via REST API or cloud storage manifests. We handle worker routing, quality checks, and micropayment settlement automatically.</p>
                 <div class="featured-actions">
-                    <a href="https://docs.asgrefinery.io/guides/quickstart" class="fa-primary" target="_blank">Quickstart Guide</a>
-                    <a href="https://docs.asgrefinery.io/reference/api" class="fa-ghost" target="_blank">API Reference</a>
+                    <a href="https://docs.asgrefinery.io/docs/quickstart" class="fa-primary" target="_blank" rel="noopener noreferrer">Quickstart Guide</a>
+                    <a href="https://docs.asgrefinery.io/api" class="fa-ghost" target="_blank" rel="noopener noreferrer">API Reference</a>
                 </div>
             </div>
             <div class="featured-visual">
@@ -1132,7 +1268,7 @@
                         <li><span class="check">✓</span> S3 &amp; GCS manifest ingestion</li>
                         <li><span class="check">✓</span> Interactive API reference in docs</li>
                     </ul>
-                    <a href="https://docs.asgrefinery.io/guides/quickstart" class="hero-btn hero-btn-primary" target="_blank" style="font-size:14px; padding:12px 24px;">
+                    <a href="https://docs.asgrefinery.io/docs/quickstart" class="hero-btn hero-btn-primary" target="_blank" rel="noopener noreferrer" style="font-size:14px; padding:12px 24px;">
                         View Quickstart →
                     </a>
                 </div>
@@ -1181,7 +1317,7 @@ batch = client.tasks.create_batch(
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
                         Create Free Account
                     </a>
-                    <a href="https://docs.asgrefinery.io" class="hero-btn hero-btn-outline" target="_blank">
+                    <a href="https://docs.asgrefinery.io" class="hero-btn hero-btn-outline" target="_blank" rel="noopener noreferrer">
                         Explore Documentation
                     </a>
                 </div>
@@ -1197,55 +1333,60 @@ batch = client.tasks.create_batch(
                     <h3>ASG REFINERY</h3>
                     <p>Enterprise-grade human data labeling powered by BSV micropayments. Built for developers who need quality labels at scale.</p>
                     <div class="footer-social">
-                        <a href="https://github.com/dbelay90-collab" target="_blank" aria-label="GitHub">GH</a>
-                        <a href="/cdn-cgi/l/email-protection#54272124243b2620143527332631323d3a31262d7a3d3b" aria-label="Email">✉</a>
+                        <a href="https://github.com/dbelay90-collab" target="_blank" rel="noopener noreferrer" aria-label="GitHub">GH</a>
+                        <a href="mailto:support@asgrefinery.io" aria-label="Email">✉</a>
                     </div>
                 </div>
                 <div class="footer-col">
                     <h4>Platform</h4>
                     <a href="https://console.asgrefinery.io">Console</a>
-                    <a href="https://docs.asgrefinery.io/guides/quickstart" target="_blank">Quickstart</a>
-                    <a href="https://docs.asgrefinery.io/reference/api" target="_blank">API Reference</a>
-                    <a href="https://docs.asgrefinery.io/concepts/pricing" target="_blank">Pricing</a>
+                    <a href="https://docs.asgrefinery.io/docs/quickstart" target="_blank" rel="noopener noreferrer">Quickstart</a>
+                    <a href="https://docs.asgrefinery.io/api" target="_blank" rel="noopener noreferrer">API Reference</a>
+                    <a href="https://docs.asgrefinery.io" target="_blank" rel="noopener noreferrer">Pricing</a>
                 </div>
                 <div class="footer-col">
                     <h4>Developers</h4>
-                    <a href="https://docs.asgrefinery.io" target="_blank">Documentation</a>
-                    <a href="https://docs.asgrefinery.io/sdks/python" target="_blank">Python SDK</a>
-                    <a href="https://docs.asgrefinery.io/guides/s3-manifest" target="_blank">S3 Manifests</a>
-                    <a href="https://docs.asgrefinery.io/guides/webhooks" target="_blank">Webhooks</a>
+                    <a href="https://docs.asgrefinery.io" target="_blank" rel="noopener noreferrer">Documentation</a>
+                    <a href="https://docs.asgrefinery.io/docs/sdks/python" target="_blank" rel="noopener noreferrer">Python SDK</a>
+                    <a href="https://docs.asgrefinery.io/docs/quickstart" target="_blank" rel="noopener noreferrer">S3 Manifests</a>
+                    <a href="https://docs.asgrefinery.io/docs/guides/webhooks" target="_blank" rel="noopener noreferrer">Webhooks</a>
                 </div>
                 <div class="footer-col">
                     <h4>Contact</h4>
-                    <a href="/cdn-cgi/l/email-protection#e4979194948b9690a48597839681828d8a81969dca8d8b">Support</a>
-                    <a href="/cdn-cgi/l/email-protection#c8a9aca5a1a688a9bbafbaadaea1a6adbab1e6a1a7">Business Inquiries</a>
+                    <a href="mailto:support@asgrefinery.io">Support</a>
+                    <a href="mailto:admin@asgrefinery.io">Business Inquiries</a>
                 </div>
             </div>
             <div class="footer-bottom">
                 <span>© 2026 ASG Refinery. All rights reserved.</span>
                 <div class="footer-bottom-links">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
+                    <a href="https://console.asgrefinery.io/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+                    <a href="https://console.asgrefinery.io/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a>
                 </div>
             </div>
         </div>
     </footer>
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
         /* ========== PARTICLE CANVAS ========== */
         (function() {
             const canvas = document.getElementById('particle-canvas');
             const ctx = canvas.getContext('2d');
             let particles = [];
             let mouse = { x: null, y: null };
-            let animId;
 
             function resize() {
                 canvas.width = canvas.parentElement.offsetWidth;
                 canvas.height = canvas.parentElement.offsetHeight;
+                init();
             }
-            resize();
-            window.addEventListener('resize', resize);
+            let resizeTimer = null;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(resize, 150);
+            });
 
             class Particle {
                 constructor() {
@@ -1261,14 +1402,13 @@ batch = client.tasks.create_batch(
                     this.y += this.vy;
                     if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
                     if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-                    // Mouse repulsion
                     if (mouse.x !== null) {
                         const dx = this.x - mouse.x;
                         const dy = this.y - mouse.y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
                         if (dist < 120) {
-                            this.x += dx / dist * 2;
-                            this.y += dy / dist * 2;
+                            this.x += (dx / dist) * 2;
+                            this.y += (dy / dist) * 2;
                         }
                     }
                 }
@@ -1281,11 +1421,8 @@ batch = client.tasks.create_batch(
             }
 
             function init() {
-                const count = Math.min(80, Math.floor(canvas.width * canvas.height / 12000));
-                particles = [];
-                for (let i = 0; i < count; i++) {
-                    particles.push(new Particle());
-                }
+                const count = Math.min(80, Math.floor((canvas.width * canvas.height) / 12000));
+                particles = Array.from({ length: count }, () => new Particle());
             }
 
             function drawLines() {
@@ -1308,48 +1445,242 @@ batch = client.tasks.create_batch(
 
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(p => { p.update(); p.draw(); });
+                particles.forEach((p) => { p.update(); p.draw(); });
                 drawLines();
-                animId = requestAnimationFrame(animate);
+                requestAnimationFrame(animate);
             }
 
             canvas.parentElement.addEventListener('mousemove', (e) => {
                 const rect = canvas.getBoundingClientRect();
                 mouse.x = e.clientX - rect.left;
                 mouse.y = e.clientY - rect.top;
-            });
+            }, { passive: true });
             canvas.parentElement.addEventListener('mouseleave', () => {
                 mouse.x = null;
                 mouse.y = null;
-            });
+            }, { passive: true });
 
-            init();
+            resize();
             animate();
-            window.addEventListener('resize', () => { init(); });
         })();
 
-        /* ========== STICKY NAV ========== */
-        const nav = document.getElementById('nav');
-        window.addEventListener('scroll', () => {
-            nav.classList.toggle('scrolled', window.scrollY > 50);
-        });
+        /* ========== STICKY NAV + SCROLL PROGRESS ========== */
+        (function() {
+            const nav = document.getElementById('nav');
+            const bar = document.createElement('div');
+            bar.className = 'scroll-progress';
+            document.body.prepend(bar);
 
-        /* ========== SCROLL REVEAL ========== */
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const delay = parseInt(entry.target.dataset.delay || 0);
-                    setTimeout(() => {
-                        entry.target.classList.add('visible');
-                    }, delay);
-                    observer.unobserve(entry.target);
-                }
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+                nav.classList.toggle('scrolled', scrollTop > 50);
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                bar.style.width = `${scrollPercent}%`;
+            }, { passive: true });
+        })();
+
+        /* ========== SCROLL REVEAL CLASS MAPPING ========== */
+        (function() {
+            document.querySelectorAll('.section-header').forEach((el) => el.classList.add('reveal-up'));
+            document.querySelectorAll('.feature-card').forEach((el, idx) => el.classList.add(idx % 2 ? 'reveal-right' : 'reveal-left'));
+            const featured = document.querySelector('.featured-card');
+            if (featured) featured.classList.add('reveal-scale');
+            const codeText = document.querySelector('.code-text');
+            if (codeText) codeText.classList.add('reveal-left');
+            const codeWrap = document.querySelector('.code-block-wrapper');
+            if (codeWrap) codeWrap.classList.add('reveal-right');
+            const ctaCard = document.querySelector('.cta-card');
+            if (ctaCard) ctaCard.classList.add('reveal-scale');
+            document.querySelectorAll('.stat-item').forEach((el, idx) => {
+                el.classList.add('reveal-up');
+                el.dataset.delay = String(idx * 80);
             });
-        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+        })();
 
-        document.querySelectorAll('.step-card, .feature-card, .code-block-wrapper').forEach(el => {
-            observer.observe(el);
+        /* ========== SCROLL REVEAL OBSERVER ========== */
+        (function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    const delay = parseInt(entry.target.dataset.delay || '0', 10);
+                    setTimeout(() => entry.target.classList.add('visible'), delay);
+                    observer.unobserve(entry.target);
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+            document.querySelectorAll('.step-card, .reveal-up, .reveal-left, .reveal-right, .reveal-scale').forEach((el) => observer.observe(el));
+        })();
+
+        /* ========== TYPEWRITER (HERO SUBTITLE) ========== */
+        (function() {
+            const p = document.querySelector('.hero p');
+            if (!p) return;
+            const fullText = p.textContent;
+            p.textContent = '';
+            p.style.opacity = '1';
+            let i = 0;
+            function type() {
+                if (i >= fullText.length) return;
+                p.textContent += fullText.charAt(i++);
+                setTimeout(type, 18 + Math.random() * 12);
+            }
+            setTimeout(type, 800);
+        })();
+
+        /* ========== COUNTER ANIMATION ========== */
+        function animateValue(el, start, end, duration, formatter) {
+            const startTime = performance.now();
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = Math.round(start + (end - start) * eased);
+                el.textContent = formatter(current);
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        }
+        (function animateCounters() {
+            const statsSection = document.querySelector('.stats-section');
+            if (!statsSection) return;
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    entry.target.querySelectorAll('.stat-number').forEach((counter) => {
+                        const text = counter.textContent;
+                        const target = counter.dataset.target || '0';
+                        if (text.includes('$')) animateValue(counter, 0, 4, 1500, (v) => `$${(v / 100).toFixed(2)}`);
+                        else if (text.includes('s')) animateValue(counter, 0, 3, 1200, (v) => `<${v}s`);
+                        else if (text.includes('bit')) animateValue(counter, 0, 256, 1800, (v) => `${v}-bit`);
+                        else animateValue(counter, 0, parseInt(target, 10), 1000, (v) => `${v}`);
+                    });
+                    statsObserver.unobserve(entry.target);
+                });
+            }, { threshold: 0.3 });
+            statsObserver.observe(statsSection);
+        })();
+
+        /* ========== CODE BLOCK LINE REVEAL ========== */
+        (function() {
+            const codeBody = document.querySelector('.code-body');
+            if (!codeBody) return;
+            const lines = codeBody.innerHTML.split('\n');
+            codeBody.innerHTML = '';
+            const wrap = codeBody.closest('.code-block-wrapper');
+            if (!wrap) return;
+            const codeObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    lines.forEach((line, i) => {
+                        setTimeout(() => {
+                            const span = document.createElement('div');
+                            span.innerHTML = line || '&nbsp;';
+                            span.style.opacity = '0';
+                            span.style.transform = 'translateX(-10px)';
+                            span.style.transition = 'all 0.3s ease';
+                            codeBody.appendChild(span);
+                            requestAnimationFrame(() => {
+                                span.style.opacity = '1';
+                                span.style.transform = 'translateX(0)';
+                            });
+                        }, i * 80);
+                    });
+                    codeObserver.unobserve(entry.target);
+                });
+            }, { threshold: 0.3 });
+            codeObserver.observe(wrap);
+        })();
+
+        /* ========== CARD SPOTLIGHT ========== */
+        document.querySelectorAll('.feature-card').forEach((card) => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+            }, { passive: true });
         });
+
+        /* ========== PARALLAX SCROLLING ========== */
+        (function() {
+            const heroContent = document.querySelector('.hero-content');
+            const heroCanvas = document.getElementById('particle-canvas');
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                if (heroContent && scrollY < window.innerHeight) {
+                    heroContent.style.transform = `translateY(${scrollY * 0.15}px)`;
+                    heroContent.style.opacity = String(1 - (scrollY / (window.innerHeight * 0.8)));
+                }
+                if (heroCanvas && scrollY < window.innerHeight) {
+                    heroCanvas.style.transform = `translateY(${scrollY * 0.08}px)`;
+                }
+            }, { passive: true });
+        })();
+
+        /* ========== DESKTOP-ONLY MICROINTERACTIONS ========== */
+        function addTiltEffect(selector, maxTilt) {
+            document.querySelectorAll(selector).forEach((card) => {
+                card.style.transformStyle = 'preserve-3d';
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -maxTilt;
+                    const rotateY = ((x - centerX) / centerX) * maxTilt;
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+                }, { passive: true });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+                    card.style.transition = 'transform 0.5s ease';
+                });
+                card.addEventListener('mouseenter', () => {
+                    card.style.transition = 'transform 0.1s ease';
+                });
+            });
+        }
+        function addMagneticEffect(selector, strength) {
+            document.querySelectorAll(selector).forEach((btn) => {
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    btn.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
+                }, { passive: true });
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = 'translate(0, 0)';
+                    btn.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                });
+                btn.addEventListener('mouseenter', () => {
+                    btn.style.transition = 'transform 0.15s ease';
+                });
+            });
+        }
+        function initCursorGlow() {
+            const glow = document.createElement('div');
+            glow.id = 'cursor-glow';
+            glow.style.cssText = 'position:fixed;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle, rgba(74,144,217,0.06), transparent 70%);pointer-events:none;z-index:0;transform:translate(-50%,-50%);transition:opacity 0.3s ease;will-change:transform;';
+            document.body.appendChild(glow);
+            let gx = 0, gy = 0, tx = 0, ty = 0;
+            document.addEventListener('mousemove', (e) => { tx = e.clientX; ty = e.clientY; }, { passive: true });
+            function step() {
+                gx += (tx - gx) * 0.08;
+                gy += (ty - gy) * 0.08;
+                glow.style.left = `${gx}px`;
+                glow.style.top = `${gy}px`;
+                requestAnimationFrame(step);
+            }
+            step();
+        }
+        if (!isTouchDevice) {
+            addTiltEffect('.feature-card', 6);
+            addTiltEffect('.featured-card', 3);
+            addMagneticEffect('.hero-btn', 0.3);
+            addMagneticEffect('.btn-primary', 0.2);
+            addMagneticEffect('.fa-primary', 0.25);
+            initCursorGlow();
+        }
 
         /* ========== COPY CODE ========== */
         function copyCode(btn) {
@@ -1361,13 +1692,16 @@ batch = client.tasks.create_batch(
         }
 
         /* ========== SMOOTH SCROLL ========== */
-        document.querySelectorAll('a[href^="#"]').forEach(a => {
+        document.querySelectorAll('a[href^="#"]').forEach((a) => {
             a.addEventListener('click', (e) => {
                 e.preventDefault();
-                const target = document.querySelector(a.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                const href = a.getAttribute('href');
+                if (!href || href === '#') {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
                 }
+                const target = document.querySelector(href);
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
     </script>
