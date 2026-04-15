@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASG Refinery — Human-Powered Data Labeling at Scale</title>
+    <meta name="description" content="Enterprise-grade data labeling platform. Submit tasks via API, get quality labels from verified human workers, pay per label with BSV micropayments.">
+    <meta property="og:title" content="ASG Refinery — Human-Powered Data Labeling at Scale">
+    <meta property="og:description" content="Enterprise-grade data labeling platform powered by BSV micropayments.">
+    <meta property="og:image" content="https://docs.asgrefinery.io/img/og-image.png">
+    <meta property="og:url" content="https://asgrefinery.io">
+    <link rel="icon" href="https://docs.asgrefinery.io/img/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ========== RESET & BASE ========== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #F0F7FF;
+            color: #1E3A5F;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        a { text-decoration: none; color: inherit; }
+        img { max-width: 100%; }
+
+        /* ========== STICKY NAV ========== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 40px;
+            transition: all 0.3s ease;
+        }
+        .nav.scrolled {
+            background: rgba(240, 247, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(30, 58, 95, 0.08);
+        }
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 20px;
+            color: #1E3A5F;
+        }
+        .nav-brand img { height: 32px; width: 32px; border-radius: 6px; }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(30, 58, 95, 0.06);
+            border-radius: 100px;
+            padding: 4px;
+        }
+        .nav-links a {
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4A6A8A;
+            transition: all 0.2s ease;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            background: #fff;
+            color: #1E3A5F;
+            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.1);
+        }
+        .nav-cta {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .nav-cta a {
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-secondary {
+            color: #1E3A5F;
+        }
+        .btn-secondary:hover { color: #4A90D9; }
+        .btn-primary {
+            background: #1E3A5F;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #2a4f7a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+        }
+
+        /* ========== HERO ========== */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 40px 80px;
+            overflow: hidden;
+        }
+        #particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 800px;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px 6px 8px;
+            background: rgba(74, 144, 217, 0.1);
+            border: 1px solid rgba(74, 144, 217, 0.2);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #4A90D9;
+            margin-bottom: 24px;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        .hero-badge .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulse-dot 2s ease infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+        }
+        .hero h1 {
+            font-size: clamp(40px, 6vw, 72px);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.6s ease 0.1s forwards;
+            opacity: 0;
+        }
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, #4A90D9 0%, #87CEEB 50%, #4A90D9 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s linear infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+        .hero p {
+            font-size: 18px;
+            color: #4A6A8A;
+            max-width: 560px;
+            margin: 0 auto 32px;
+            line-height: 1.7;
+            animation: fadeInUp 0.6s ease 0.2s forwards;
+            opacity: 0;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.6s ease 0.3s forwards;
+            opacity: 0;
+        }
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            border-radius: 100px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+        .hero-btn-primary {
+            background: #1E3A5F;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.3);
+        }
+        .hero-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(30, 58, 95, 0.4);
+            background: #2a4f7a;
+        }
+        .hero-btn-outline {
+            background: rgba(255,255,255,0.8);
+            color: #1E3A5F;
+            border: 1px solid rgba(30, 58, 95, 0.15);
+        }
+        .hero-btn-outline:hover {
+            background: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(30, 58, 95, 0.1);
+        }
+        .hero-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* ========== ICON ROW ========== */
+        .icon-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 48px;
+            animation: fadeInUp 0.6s ease 0.4s forwards;
+            opacity: 0;
+        }
+        .icon-row span {
+            font-size: 13px;
+            color: #4A6A8A;
+            font-weight: 500;
+        }
+        .icon-pill {
+            display: flex;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #fff;
+            border-radius: 100px;
+            border: 1px solid rgba(30, 58, 95, 0.08);
+            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.06);
+        }
+        .tech-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* ========== SECTION SHARED ========== */
+        section {
+            padding: 100px 40px;
+        }
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+        .section-label {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #4A90D9;
+            margin-bottom: 12px;
+        }
+        .section-header h2 {
+            font-size: clamp(28px, 4vw, 44px);
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+        .section-header p {
+            font-size: 17px;
+            color: #4A6A8A;
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        /* ========== FEATURED CARD ========== */
+        .featured-section {
+            padding: 0 40px 80px;
+        }
+        .featured-card {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #1E3A5F 0%, #2a5580 50%, #1E3A5F 100%);
+            border-radius: 24px;
+            padding: 48px;
+            display: flex;
+            align-items: center;
+            gap: 48px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .featured-card:hover {
+            transform: scale(1.01);
+        }
+        .featured-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(74, 144, 217, 0.3) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .featured-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 4px 12px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .featured-content { flex: 1; position: relative; z-index: 1; }
+        .featured-content h3 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+        .featured-content p {
+            font-size: 16px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 24px;
+            max-width: 440px;
+        }
+        .featured-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .featured-actions a {
+            padding: 10px 24px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .featured-actions .fa-primary {
+            background: #fff;
+            color: #1E3A5F;
+        }
+        .featured-actions .fa-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .featured-actions .fa-ghost {
+            color: rgba(255,255,255,0.8);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .featured-actions .fa-ghost:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+        .featured-visual {
+            position: relative;
+            z-index: 1;
+            width: 200px;
+            flex-shrink: 0;
+        }
+        .api-preview {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #87CEEB;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .api-preview .line { margin-bottom: 4px; }
+        .api-preview .key { color: #87CEEB; }
+        .api-preview .val { color: #22c55e; }
+        .api-preview .comment { color: rgba(255,255,255,0.3); }
+
+        /* ========== HOW IT WORKS ========== */
+        .how-it-works {
+            background: #fff;
+        }
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            position: relative;
+        }
+        .steps-grid::before {
+            content: '';
+            position: absolute;
+            top: 48px;
+            left: 12.5%;
+            width: 75%;
+            height: 2px;
+            background: linear-gradient(90deg, #4A90D9, #87CEEB, #4A90D9, #87CEEB);
+            z-index: 0;
+        }
+        .step-card {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s ease;
+        }
+        .step-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .step-number {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: #F0F7FF;
+            border: 3px solid #4A90D9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+            font-weight: 800;
+            color: #4A90D9;
+            transition: all 0.3s ease;
+        }
+        .step-card:hover .step-number {
+            background: #4A90D9;
+            color: #fff;
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(74, 144, 217, 0.3);
+        }
+        .step-card h4 {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .step-card p {
+            font-size: 14px;
+            color: #4A6A8A;
+            line-height: 1.6;
+        }
+
+        /* ========== FEATURES GRID ========== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .feature-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 36px;
+            border: 1px solid rgba(30, 58, 95, 0.06);
+            transition: all 0.4s ease;
+            cursor: default;
+            opacity: 0;
+            transform: translateY(30px);
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4A90D9, #87CEEB);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-6px) !important;
+            box-shadow: 0 20px 60px rgba(30, 58, 95, 0.12);
+            border-color: rgba(74, 144, 217, 0.15);
+        }
+        .feature-card:hover::after { opacity: 1; }
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .feature-card h4 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .feature-card p {
+            font-size: 14px;
+            color: #4A6A8A;
+            line-height: 1.7;
+        }
+
+        /* ========== STATS ========== */
+        .stats-section {
+            background: #1E3A5F;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        .stats-section::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(74, 144, 217, 0.2), transparent 70%);
+        }
+        .stats-section::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(135, 206, 235, 0.15), transparent 70%);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            position: relative;
+            z-index: 1;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 900;
+            letter-spacing: -2px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #87CEEB, #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ========== CODE SECTION ========== */
+        .code-section {
+            background: #fff;
+        }
+        .code-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+        .code-text h2 {
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+        .code-text p {
+            font-size: 16px;
+            color: #4A6A8A;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+        .code-features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+        .code-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            font-size: 15px;
+            color: #4A6A8A;
+        }
+        .code-features li .check {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .code-block-wrapper {
+            position: relative;
+            opacity: 0;
+            transform: translateX(30px);
+            transition: all 0.6s ease;
+        }
+        .code-block-wrapper.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .code-block {
+            background: #0f1724;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 20px 60px rgba(30, 58, 95, 0.2);
+        }
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            background: rgba(255,255,255,0.04);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .code-dots {
+            display: flex;
+            gap: 6px;
+        }
+        .code-dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .code-dots span:nth-child(1) { background: #ff5f57; }
+        .code-dots span:nth-child(2) { background: #ffbd2e; }
+        .code-dots span:nth-child(3) { background: #28c840; }
+        .code-lang {
+            font-size: 12px;
+            color: rgba(255,255,255,0.4);
+            font-weight: 500;
+        }
+        .copy-btn {
+            padding: 4px 12px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+        }
+        .code-body {
+            padding: 24px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            color: #e2e8f0;
+            overflow-x: auto;
+        }
+        .code-body .kw { color: #c792ea; }
+        .code-body .fn { color: #82aaff; }
+        .code-body .str { color: #c3e88d; }
+        .code-body .com { color: #546e7a; }
+        .code-body .num { color: #f78c6c; }
+        .code-body .var { color: #89ddff; }
+        .code-body .type { color: #ffcb6b; }
+
+        /* ========== CTA SECTION ========== */
+        .cta-section {
+            text-align: center;
+        }
+        .cta-card {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 32px;
+            padding: 64px 48px;
+            border: 1px solid rgba(30, 58, 95, 0.06);
+            box-shadow: 0 20px 60px rgba(30, 58, 95, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #1E3A5F, #4A90D9, #87CEEB);
+        }
+        .cta-card h2 {
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+        .cta-card p {
+            font-size: 17px;
+            color: #4A6A8A;
+            margin-bottom: 32px;
+            max-width: 480px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cta-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background: #fff;
+            border-top: 1px solid rgba(30, 58, 95, 0.06);
+            padding: 64px 40px 32px;
+        }
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+        .footer-brand h3 {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+        .footer-brand p {
+            font-size: 14px;
+            color: #4A6A8A;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        .footer-social {
+            display: flex;
+            gap: 12px;
+        }
+        .footer-social a {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #F0F7FF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4A6A8A;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+        .footer-social a:hover {
+            background: #1E3A5F;
+            color: #fff;
+        }
+        .footer-col h4 {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            color: #1E3A5F;
+        }
+        .footer-col a {
+            display: block;
+            font-size: 14px;
+            color: #4A6A8A;
+            padding: 6px 0;
+            transition: color 0.2s ease;
+        }
+        .footer-col a:hover { color: #4A90D9; }
+        .footer-bottom {
+            padding-top: 24px;
+            border-top: 1px solid rgba(30, 58, 95, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #4A6A8A;
+        }
+        .footer-bottom-links {
+            display: flex;
+            gap: 24px;
+        }
+        .footer-bottom-links a {
+            color: #4A6A8A;
+            transition: color 0.2s ease;
+        }
+        .footer-bottom-links a:hover { color: #4A90D9; }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== MOBILE NAV ========== */
+        .mobile-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: rgba(30,58,95,0.06);
+            border-radius: 10px;
+            cursor: pointer;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .mobile-toggle span {
+            display: block;
+            width: 18px;
+            height: 2px;
+            background: #1E3A5F;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1024px) {
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .steps-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+            .steps-grid::before { display: none; }
+            .code-layout { grid-template-columns: 1fr; gap: 40px; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav { padding: 12px 20px; }
+            .nav-links, .nav-cta .btn-secondary { display: none; }
+            .mobile-toggle { display: flex; }
+            section { padding: 64px 20px; }
+            .hero { padding: 100px 20px 60px; }
+            .featured-section { padding: 0 20px 60px; }
+            .featured-card {
+                flex-direction: column;
+                padding: 32px;
+                gap: 24px;
+            }
+            .featured-visual { width: 100%; }
+            .features-grid { grid-template-columns: 1fr; }
+            .steps-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+            .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+            .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+        }
+
+        /* ========== MOBILE NAV MENU ========== */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(240,247,255,0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+        }
+        .mobile-menu.open { display: flex; }
+        .mobile-menu a {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1E3A5F;
+            padding: 12px;
+        }
+        .mobile-menu .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: rgba(30,58,95,0.06);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #1E3A5F;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav class="nav" id="nav">
+        <div class="nav-inner">
+            <a href="#" class="nav-brand">
+                <img src="https://docs.asgrefinery.io/img/logo.png" alt="ASG Refinery" onerror="this.style.display='none'">
+                ASG REFINERY
+            </a>
+            <div class="nav-links">
+                <a href="#how" class="active">How It Works</a>
+                <a href="#features">Features</a>
+                <a href="#developers">Developers</a>
+                <a href="https://docs.asgrefinery.io" target="_blank">Docs</a>
+            </div>
+            <div class="nav-cta">
+                <a href="https://console.asgrefinery.io" class="btn-secondary">Sign in</a>
+                <a href="https://console.asgrefinery.io" class="btn-primary">Get Started</a>
+            </div>
+            <button class="mobile-toggle" onclick="document.getElementById('mobileMenu').classList.add('open')">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- MOBILE MENU -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="close-btn" onclick="this.parentElement.classList.remove('open')">&times;</button>
+        <a href="#how" onclick="this.parentElement.classList.remove('open')">How It Works</a>
+        <a href="#features" onclick="this.parentElement.classList.remove('open')">Features</a>
+        <a href="#developers" onclick="this.parentElement.classList.remove('open')">Developers</a>
+        <a href="https://docs.asgrefinery.io" target="_blank">Docs</a>
+        <a href="https://console.asgrefinery.io" class="hero-btn hero-btn-primary" style="margin-top:24px">Get Started</a>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero">
+        <canvas id="particle-canvas"></canvas>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="dot"></span>
+                Platform Live on Staging
+            </div>
+            <h1>Human-Powered<br><span class="gradient-text">Data Labeling</span><br>at Scale</h1>
+            <p>Submit tasks via API. Verified human workers label your data. Pay per label with BSV micropayments. Enterprise-grade quality, startup-friendly pricing.</p>
+            <div class="hero-buttons">
+                <a href="https://console.asgrefinery.io" class="hero-btn hero-btn-primary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    Start Labeling
+                </a>
+                <a href="https://docs.asgrefinery.io" class="hero-btn hero-btn-outline" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    Read the Docs
+                </a>
+            </div>
+            <div class="icon-row">
+                <span>Powered by</span>
+                <div class="icon-pill">
+                    <div class="tech-icon" style="background:#4A90D9">Go</div>
+                    <div class="tech-icon" style="background:#f7931a">₿</div>
+                    <div class="tech-icon" style="background:#0ea5e9">AS</div>
+                    <div class="tech-icon" style="background:#22c55e">HC</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURED -->
+    <div class="featured-section">
+        <div class="featured-card">
+            <span class="featured-badge">API-First Platform</span>
+            <div class="featured-content">
+                <h3>Submit Once, Scale Forever</h3>
+                <p>Batch upload thousands of labeling tasks via REST API or cloud storage manifests. We handle worker routing, quality checks, and micropayment settlement automatically.</p>
+                <div class="featured-actions">
+                    <a href="https://docs.asgrefinery.io/guides/quickstart" class="fa-primary" target="_blank">Quickstart Guide</a>
+                    <a href="https://docs.asgrefinery.io/reference/api" class="fa-ghost" target="_blank">API Reference</a>
+                </div>
+            </div>
+            <div class="featured-visual">
+                <div class="api-preview">
+                    <div class="line"><span class="comment">// Submit a batch</span></div>
+                    <div class="line">POST <span class="val">/v1/tasks/batch</span></div>
+                    <div class="line">{</div>
+                    <div class="line">&nbsp;&nbsp;<span class="key">"type"</span>: <span class="val">"image_classification"</span>,</div>
+                    <div class="line">&nbsp;&nbsp;<span class="key">"items"</span>: <span class="val">1000</span>,</div>
+                    <div class="line">&nbsp;&nbsp;<span class="key">"price"</span>: <span class="val">"$0.04/label"</span></div>
+                    <div class="line">}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-it-works" id="how">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-label">How It Works</span>
+                <h2>Four Steps to Quality Labels</h2>
+                <p>From API call to labeled dataset in minutes, not weeks.</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card" data-delay="0">
+                    <div class="step-number">1</div>
+                    <h4>Submit Tasks</h4>
+                    <p>Upload images via API or connect your S3/GCS bucket. Define label categories and quality requirements.</p>
+                </div>
+                <div class="step-card" data-delay="100">
+                    <div class="step-number">2</div>
+                    <h4>Workers Claim</h4>
+                    <p>Verified human workers are matched by language, skill, and availability. Tasks are claimed and labeled in real-time.</p>
+                </div>
+                <div class="step-card" data-delay="200">
+                    <div class="step-number">3</div>
+                    <h4>Quality Checks</h4>
+                    <p>Multi-layer validation ensures accuracy. Consensus scoring, audit trails, and automatic requeue for disputed labels.</p>
+                </div>
+                <div class="step-card" data-delay="300">
+                    <div class="step-number">4</div>
+                    <h4>Get Results</h4>
+                    <p>Receive labeled data via webhook or poll the API. Workers are paid instantly via BSV micropayments.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-label">Features</span>
+                <h2>Built for Production</h2>
+                <p>Everything you need to run human labeling at enterprise scale.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card" data-delay="0">
+                    <div class="feature-icon" style="background:rgba(74,144,217,0.1); color:#4A90D9">⚡</div>
+                    <h4>USD-First Pricing</h4>
+                    <p>Set prices in dollars. We handle BSV conversion with a 3-exchange price oracle and 5-minute cache for stable, predictable costs.</p>
+                </div>
+                <div class="feature-card" data-delay="80">
+                    <div class="feature-icon" style="background:rgba(34,197,94,0.1); color:#22c55e">🔒</div>
+                    <h4>AES-256 Encryption</h4>
+                    <p>Worker PII encrypted at rest with AES-256-GCM. API credentials, phone numbers, and sensitive data never stored in plaintext.</p>
+                </div>
+                <div class="feature-card" data-delay="160">
+                    <div class="feature-icon" style="background:rgba(245,158,11,0.1); color:#f59e0b">📊</div>
+                    <h4>Prometheus Metrics</h4>
+                    <p>Full observability out of the box. Task throughput, settlement latency, worker utilization, and pricing oracle health — all on Grafana.</p>
+                </div>
+                <div class="feature-card" data-delay="0">
+                    <div class="feature-icon" style="background:rgba(139,92,246,0.1); color:#8b5cf6">🌍</div>
+                    <h4>Language-Aware Routing</h4>
+                    <p>Workers declare languages and proficiency. Tasks with language requirements are routed to matching workers automatically.</p>
+                </div>
+                <div class="feature-card" data-delay="80">
+                    <div class="feature-icon" style="background:rgba(236,72,153,0.1); color:#ec4899">💳</div>
+                    <h4>Flexible Payment Modes</h4>
+                    <p>Prepaid balance-gated or postpaid credit-limited. Account status lifecycle with full audit trail. You choose.</p>
+                </div>
+                <div class="feature-card" data-delay="160">
+                    <div class="feature-icon" style="background:rgba(20,184,166,0.1); color:#14b8a6">🤝</div>
+                    <h4>Referral Partners</h4>
+                    <p>Built-in referral system with configurable splits, cumulative caps, and automatic HandCash settlement. Grow your network.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats-section">
+        <div class="section-container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" data-target="4">$0.04</div>
+                    <div class="stat-label">Per Label</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="3">&lt;3s</div>
+                    <div class="stat-label">Settlement Time</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="3">3</div>
+                    <div class="stat-label">Exchange Oracle</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="256">256-bit</div>
+                    <div class="stat-label">Encryption</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DEVELOPER SECTION -->
+    <section class="code-section" id="developers">
+        <div class="section-container">
+            <div class="code-layout">
+                <div class="code-text">
+                    <span class="section-label">For Developers</span>
+                    <h2>Ship in Minutes,<br>Not Months</h2>
+                    <p>Our REST API is designed for developer happiness. Python SDK included. Submit your first task in under 5 minutes.</p>
+                    <ul class="code-features">
+                        <li><span class="check">✓</span> RESTful API with OpenAPI 3.0 spec</li>
+                        <li><span class="check">✓</span> Python SDK with type hints</li>
+                        <li><span class="check">✓</span> Webhook delivery with HMAC signatures</li>
+                        <li><span class="check">✓</span> S3 &amp; GCS manifest ingestion</li>
+                        <li><span class="check">✓</span> Interactive API reference in docs</li>
+                    </ul>
+                    <a href="https://docs.asgrefinery.io/guides/quickstart" class="hero-btn hero-btn-primary" target="_blank" style="font-size:14px; padding:12px 24px;">
+                        View Quickstart →
+                    </a>
+                </div>
+                <div class="code-block-wrapper">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dots"><span></span><span></span><span></span></div>
+                            <span class="code-lang">Python</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <div class="code-body" id="codeSnippet">
+<span class="kw">from</span> asg_refinery <span class="kw">import</span> Client
+
+<span class="com"># Initialize with your API key</span>
+client = Client(<span class="str">"your-api-key"</span>)
+
+<span class="com"># Submit a batch of labeling tasks</span>
+batch = client.tasks.create_batch(
+    task_type=<span class="str">"image_classification"</span>,
+    items=[
+        {<span class="str">"url"</span>: <span class="str">"s3://bucket/img1.jpg"</span>},
+        {<span class="str">"url"</span>: <span class="str">"s3://bucket/img2.jpg"</span>},
+    ],
+    labels=[<span class="str">"cat"</span>, <span class="str">"dog"</span>, <span class="str">"bird"</span>],
+    price_usd_cents=<span class="num">4</span>,  <span class="com"># $0.04 per label</span>
+)
+
+<span class="kw">print</span>(f<span class="str">"Submitted {batch.count} tasks"</span>)
+<span class="com"># → Submitted 2 tasks</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="section-container">
+            <div class="cta-card">
+                <span class="section-label">Ready?</span>
+                <h2>Start Labeling Today</h2>
+                <p>Create your account, grab an API key, and submit your first batch in under 5 minutes.</p>
+                <div class="cta-buttons">
+                    <a href="https://console.asgrefinery.io" class="hero-btn hero-btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                        Create Free Account
+                    </a>
+                    <a href="https://docs.asgrefinery.io" class="hero-btn hero-btn-outline" target="_blank">
+                        Explore Documentation
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>ASG REFINERY</h3>
+                    <p>Enterprise-grade human data labeling powered by BSV micropayments. Built for developers who need quality labels at scale.</p>
+                    <div class="footer-social">
+                        <a href="https://github.com/dbelay90-collab" target="_blank" aria-label="GitHub">GH</a>
+                        <a href="/cdn-cgi/l/email-protection#54272124243b2620143527332631323d3a31262d7a3d3b" aria-label="Email">✉</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Platform</h4>
+                    <a href="https://console.asgrefinery.io">Console</a>
+                    <a href="https://docs.asgrefinery.io/guides/quickstart" target="_blank">Quickstart</a>
+                    <a href="https://docs.asgrefinery.io/reference/api" target="_blank">API Reference</a>
+                    <a href="https://docs.asgrefinery.io/concepts/pricing" target="_blank">Pricing</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Developers</h4>
+                    <a href="https://docs.asgrefinery.io" target="_blank">Documentation</a>
+                    <a href="https://docs.asgrefinery.io/sdks/python" target="_blank">Python SDK</a>
+                    <a href="https://docs.asgrefinery.io/guides/s3-manifest" target="_blank">S3 Manifests</a>
+                    <a href="https://docs.asgrefinery.io/guides/webhooks" target="_blank">Webhooks</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <a href="/cdn-cgi/l/email-protection#e4979194948b9690a48597839681828d8a81969dca8d8b">Support</a>
+                    <a href="/cdn-cgi/l/email-protection#c8a9aca5a1a688a9bbafbaadaea1a6adbab1e6a1a7">Business Inquiries</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 ASG Refinery. All rights reserved.</span>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        /* ========== PARTICLE CANVAS ========== */
+        (function() {
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let mouse = { x: null, y: null };
+            let animId;
+
+            function resize() {
+                canvas.width = canvas.parentElement.offsetWidth;
+                canvas.height = canvas.parentElement.offsetHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.vx = (Math.random() - 0.5) * 0.5;
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                    this.radius = Math.random() * 2 + 1;
+                    this.opacity = Math.random() * 0.4 + 0.1;
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+                    // Mouse repulsion
+                    if (mouse.x !== null) {
+                        const dx = this.x - mouse.x;
+                        const dy = this.y - mouse.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 120) {
+                            this.x += dx / dist * 2;
+                            this.y += dy / dist * 2;
+                        }
+                    }
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(74, 144, 217, ${this.opacity})`;
+                    ctx.fill();
+                }
+            }
+
+            function init() {
+                const count = Math.min(80, Math.floor(canvas.width * canvas.height / 12000));
+                particles = [];
+                for (let i = 0; i < count; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            function drawLines() {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 150) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(74, 144, 217, ${0.08 * (1 - dist / 150)})`;
+                            ctx.lineWidth = 1;
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => { p.update(); p.draw(); });
+                drawLines();
+                animId = requestAnimationFrame(animate);
+            }
+
+            canvas.parentElement.addEventListener('mousemove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                mouse.x = e.clientX - rect.left;
+                mouse.y = e.clientY - rect.top;
+            });
+            canvas.parentElement.addEventListener('mouseleave', () => {
+                mouse.x = null;
+                mouse.y = null;
+            });
+
+            init();
+            animate();
+            window.addEventListener('resize', () => { init(); });
+        })();
+
+        /* ========== STICKY NAV ========== */
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        /* ========== SCROLL REVEAL ========== */
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const delay = parseInt(entry.target.dataset.delay || 0);
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, delay);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.step-card, .feature-card, .code-block-wrapper').forEach(el => {
+            observer.observe(el);
+        });
+
+        /* ========== COPY CODE ========== */
+        function copyCode(btn) {
+            const code = document.getElementById('codeSnippet').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = 'Copied!';
+                setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+            });
+        }
+
+        /* ========== SMOOTH SCROLL ========== */
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(a.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
