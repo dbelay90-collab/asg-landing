@@ -1609,7 +1609,8 @@ batch = client.tasks.create_batch(
                 const scrollY = window.scrollY;
                 if (heroContent && scrollY < window.innerHeight) {
                     heroContent.style.transform = `translateY(${scrollY * 0.15}px)`;
-                    heroContent.style.opacity = String(1 - (scrollY / (window.innerHeight * 0.8)));
+                    const opacity = Math.max(0, Math.min(1, 1 - (scrollY / (window.innerHeight * 0.8))));
+                    heroContent.style.opacity = String(opacity);
                 }
                 if (heroCanvas && scrollY < window.innerHeight) {
                     heroCanvas.style.transform = `translateY(${scrollY * 0.08}px)`;
