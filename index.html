@@ -1133,29 +1133,39 @@
             transition: width 0.1s linear;
         }
 
-        /* ========== MOBILE NAV ========== */
-        .mobile-toggle {
+        /* ========== MOBILE MENU TOGGLE (single control: ☰ / ✕) ========== */
+        .menu-toggle {
             display: none;
-            width: 40px;
-            height: 40px;
+            position: relative;
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            min-height: 44px;
             border: none;
             background: rgba(255, 255, 255, 0.08);
             border-radius: 10px;
             cursor: pointer;
-            flex-direction: column;
+            flex-shrink: 0;
             align-items: center;
             justify-content: center;
-            gap: 5px;
             transition: background 0.3s ease;
+            padding: 0;
         }
-        .mobile-toggle span {
-            display: block;
-            width: 18px;
-            height: 2px;
-            background: #fff;
-            border-radius: 2px;
-            transition: all 0.3s ease;
+        .menu-toggle:hover { background: rgba(255, 255, 255, 0.12); }
+        .menu-toggle-icon {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            line-height: 1;
+            color: #fff;
+            pointer-events: none;
         }
+        .menu-toggle[aria-expanded="true"] .menu-toggle-bars { visibility: hidden; }
+        .menu-toggle[aria-expanded="true"] .menu-toggle-close { visibility: visible; }
+        .menu-toggle[aria-expanded="false"] .menu-toggle-close { visibility: hidden; }
+        .menu-toggle[aria-expanded="false"] .menu-toggle-bars { visibility: visible; }
 
         /* ========== RESPONSIVE ========== */
         @media (max-width: 1024px) {
@@ -1177,9 +1187,21 @@
         @media (max-width: 768px) {
             .nav { padding: 14px 20px; }
             .nav-brand img { height: 48px; width: 48px; }
-            .nav-links, .nav-cta .btn-secondary { display: none; }
-            .nav-inner > .theme-toggle { display: none; }
-            .mobile-toggle { display: flex; }
+            .nav-links, .nav-cta { display: none; }
+            .nav-inner > .theme-toggle {
+                display: inline-flex;
+                width: 44px;
+                height: 44px;
+                min-width: 44px;
+                min-height: 44px;
+                padding: 0;
+                justify-content: center;
+                align-items: center;
+                gap: 2px;
+                margin-left: auto;
+            }
+            .nav-inner > .theme-toggle .theme-icon { font-size: 18px; }
+            .menu-toggle { display: inline-flex; }
             .hero-buttons {
                 flex-direction: column;
                 width: 100%;
@@ -1222,6 +1244,8 @@
             left: 0;
             right: 0;
             bottom: 0;
+            padding-top: 88px;
+            box-sizing: border-box;
             background: rgba(15, 29, 50, 0.98);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -1232,38 +1256,12 @@
             gap: 24px;
         }
         .mobile-menu.open { display: flex; }
-        .mobile-menu-bar {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            z-index: 2;
-        }
         .mobile-menu a {
             font-size: 24px;
             font-weight: 700;
             color: #fff;
             padding: 12px;
         }
-        .mobile-menu .close-btn {
-            position: relative;
-            width: 40px;
-            height: 40px;
-            border: none;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 20px;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s ease;
-        }
-
         /* ========== LIGHT THEME (toggle) ========== */
         body.light-theme {
             background: #F0F7FF;
@@ -1421,18 +1419,14 @@
         }
         body.light-theme .footer-bottom-links a { color: #4A6A8A; }
         body.light-theme .footer-bottom-links a:hover { color: #4A90D9; }
-        body.light-theme .mobile-toggle {
+        body.light-theme .menu-toggle {
             background: rgba(30, 58, 95, 0.06);
         }
-        body.light-theme .mobile-toggle span { background: #1E3A5F; }
+        body.light-theme .menu-toggle-icon { color: #1E3A5F; }
         body.light-theme .mobile-menu {
             background: rgba(240, 247, 255, 0.98);
         }
         body.light-theme .mobile-menu a { color: #1E3A5F; }
-        body.light-theme .mobile-menu .close-btn {
-            background: rgba(30, 58, 95, 0.06);
-            color: #1E3A5F;
-        }
     </style>
 </head>
 <body id="top">
@@ -1463,24 +1457,18 @@
                 <a href="https://console.asgrefinery.io" class="btn-secondary">Sign in</a>
                 <a href="https://console.asgrefinery.io" class="btn-primary">Get Started</a>
             </div>
-            <button class="mobile-toggle" onclick="document.getElementById('mobileMenu').classList.add('open')">
-                <span></span><span></span><span></span>
+            <button type="button" class="menu-toggle" id="menuToggle" aria-controls="mobileMenu" aria-expanded="false" aria-label="Open menu">
+                <span class="menu-toggle-icon menu-toggle-bars" aria-hidden="true">☰</span>
+                <span class="menu-toggle-icon menu-toggle-close" aria-hidden="true">✕</span>
             </button>
         </div>
     </nav>
 
     <!-- MOBILE MENU -->
     <div class="mobile-menu" id="mobileMenu">
-        <div class="mobile-menu-bar">
-            <button type="button" class="theme-toggle" aria-label="Toggle light and dark theme">
-                <span class="theme-icon theme-sun" aria-hidden="true">☀️</span>
-                <span class="theme-icon theme-moon" aria-hidden="true">🌙</span>
-            </button>
-            <button class="close-btn" onclick="this.closest('.mobile-menu').classList.remove('open')">&times;</button>
-        </div>
-        <a href="#how" onclick="this.parentElement.classList.remove('open')">How It Works</a>
-        <a href="#features" onclick="this.parentElement.classList.remove('open')">Features</a>
-        <a href="#developers" onclick="this.parentElement.classList.remove('open')">Developers</a>
+        <a href="#how">How It Works</a>
+        <a href="#features">Features</a>
+        <a href="#developers">Developers</a>
         <a href="https://docs.asgrefinery.io" target="_blank" rel="noopener noreferrer">Docs</a>
         <a href="https://console.asgrefinery.io" class="hero-btn hero-btn-primary" style="margin-top:24px">Get Started</a>
     </div>
@@ -1981,6 +1969,26 @@ batch = client.tasks.create_batch(
             '.step-card, .feature-card, .stat-item, .code-block-wrapper, ' +
             '.reveal-up, .reveal-left, .reveal-right, .reveal-scale'
         ).forEach(el => revealObserver.observe(el));
+
+        /* ========== MOBILE MENU (single toggle, aria-expanded) ========== */
+        (function initMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const btn = document.getElementById('menuToggle');
+            if (!menu || !btn) return;
+            function setOpen(open) {
+                menu.classList.toggle('open', open);
+                btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+                btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+            }
+            btn.addEventListener('click', function () {
+                setOpen(!menu.classList.contains('open'));
+            });
+            menu.addEventListener('click', function (e) {
+                const a = e.target.closest('a');
+                if (a) setOpen(false);
+            });
+            setOpen(false);
+        })();
 
         /* ========== THEME TOGGLE ========== */
         (function initThemeToggle() {
