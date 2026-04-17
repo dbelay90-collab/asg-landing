@@ -315,6 +315,13 @@
             width: 18px;
             height: 18px;
         }
+        .hero-audience-note {
+            margin-top: 14px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.55);
+            animation: fadeInUp 0.6s ease 0.35s forwards;
+            opacity: 0;
+        }
 
         /* ========== ICON ROW ========== */
         .icon-row {
@@ -500,7 +507,7 @@
         }
         .steps-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 24px;
             position: relative;
         }
@@ -508,12 +515,25 @@
             content: '';
             position: absolute;
             top: 48px;
-            left: 12.5%;
-            width: 75%;
+            left: 16.66%;
+            width: 66.66%;
             height: 2px;
             background: linear-gradient(90deg, rgba(74, 144, 217, 0.2), rgba(135, 206, 235, 0.2), rgba(74, 144, 217, 0.2));
             z-index: 0;
         }
+        .step-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            color: #87CEEB;
+            border: 1px solid rgba(135, 206, 235, 0.22);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .step-icon svg { width: 24px; height: 24px; }
         .step-card {
             text-align: center;
             position: relative;
@@ -527,16 +547,17 @@
             transform: translateY(0);
         }
         .step-number {
-            width: 96px;
-            height: 96px;
+            width: 54px;
+            height: 54px;
             border-radius: 50%;
             background: rgba(74, 144, 217, 0.12);
             border: 3px solid rgba(74, 144, 217, 0.35);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 32px;
+            margin: 0 auto 16px;
+            font-size: 16px;
+            letter-spacing: 1px;
             font-weight: 800;
             color: #4A90D9;
             transition: all 0.3s ease;
@@ -646,6 +667,98 @@
             color: rgba(255, 255, 255, 0.55);
             line-height: 1.7;
             transition: color 0.3s ease;
+        }
+
+        /* ========== PRICING ========== */
+        .pricing-section {
+            padding-top: 48px;
+        }
+        .pricing-card {
+            max-width: 620px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(74, 144, 217, 0.28);
+            border-radius: 24px;
+            padding: 44px 36px;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+        }
+        .pricing-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+            border-color: rgba(135, 206, 235, 0.38);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .pricing-amount {
+            font-size: clamp(52px, 8vw, 70px);
+            line-height: 1;
+            font-weight: 900;
+            letter-spacing: -2px;
+            color: #87CEEB;
+            text-align: center;
+        }
+        .pricing-sub {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.55);
+        }
+        .pricing-list {
+            list-style: none;
+            margin-top: 28px;
+            display: grid;
+            gap: 10px;
+        }
+        .pricing-list li {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .pricing-list .check {
+            color: #22c55e;
+            font-weight: 800;
+            font-size: 15px;
+        }
+        .pricing-note {
+            margin-top: 20px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 14px;
+        }
+        .pricing-note a {
+            color: #87CEEB;
+            font-weight: 600;
+        }
+        .pricing-note a:hover { color: #4A90D9; }
+
+        /* ========== TRUST STRIP ========== */
+        .trust-section {
+            padding-top: 36px;
+            padding-bottom: 72px;
+        }
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(180px, 1fr));
+            gap: 14px;
+        }
+        .trust-badge {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 14px;
+        }
+        .trust-badge .trust-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        .trust-badge .trust-desc {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.45;
         }
 
         /* ========== STATS ========== */
@@ -928,6 +1041,11 @@
             transition: background 0.2s ease, color 0.2s ease;
             font-size: 14px;
         }
+        .footer-social a svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
         .footer-social a:hover {
             background: #4A90D9;
             color: #fff;
@@ -1042,10 +1160,19 @@
         /* ========== RESPONSIVE ========== */
         @media (max-width: 1024px) {
             .features-grid { grid-template-columns: repeat(2, 1fr); }
-            .steps-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+            .steps-grid { grid-template-columns: 1fr; gap: 28px; }
             .steps-grid::before { display: none; }
             .code-layout { grid-template-columns: 1fr; gap: 40px; }
             .footer-grid { grid-template-columns: 1fr 1fr; }
+            .trust-grid {
+                display: flex;
+                overflow-x: auto;
+                padding-bottom: 8px;
+            }
+            .trust-badge {
+                min-width: 220px;
+                flex-shrink: 0;
+            }
         }
         @media (max-width: 768px) {
             .nav { padding: 14px 20px; }
@@ -1053,6 +1180,16 @@
             .nav-links, .nav-cta .btn-secondary { display: none; }
             .nav-inner > .theme-toggle { display: none; }
             .mobile-toggle { display: flex; }
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+                max-width: 360px;
+                margin: 0 auto;
+            }
+            .hero-buttons .hero-btn {
+                justify-content: center;
+                width: 100%;
+            }
             section { padding: 64px 20px; }
             .hero { padding: 100px 20px 60px; }
             .featured-section { padding: 0 20px 60px; }
@@ -1216,6 +1353,11 @@
         }
         body.light-theme .step-card h4 { color: #1E3A5F; }
         body.light-theme .step-card p { color: #4A6A8A; }
+        body.light-theme .step-icon {
+            background: #fff;
+            border-color: rgba(74, 144, 217, 0.25);
+            color: #4A90D9;
+        }
         body.light-theme .feature-card {
             background: #fff;
             border: 1px solid #D1DEE8;
@@ -1241,6 +1383,21 @@
         }
         body.light-theme .cta-card h2 { color: #1E3A5F; }
         body.light-theme .cta-card p { color: #4A6A8A; }
+        body.light-theme .hero-audience-note { color: #4A6A8A; }
+        body.light-theme .pricing-card {
+            background: #fff;
+            border-color: #D1DEE8;
+            box-shadow: 0 20px 60px rgba(30, 58, 95, 0.08);
+        }
+        body.light-theme .pricing-sub,
+        body.light-theme .pricing-note { color: #4A6A8A; }
+        body.light-theme .pricing-list li { color: #4A6A8A; }
+        body.light-theme .trust-badge {
+            background: #fff;
+            border-color: #D1DEE8;
+        }
+        body.light-theme .trust-badge .trust-title { color: #1E3A5F; }
+        body.light-theme .trust-badge .trust-desc { color: #6b7f99; }
         body.light-theme .footer {
             background: #f8fafc;
             border-top: 1px solid rgba(30, 58, 95, 0.08);
@@ -1342,13 +1499,14 @@
             <div class="hero-buttons">
                 <a href="https://console.asgrefinery.io" class="hero-btn hero-btn-primary">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                    Start Labeling
+                    📊 Start Labeling
                 </a>
-                <a href="https://docs.asgrefinery.io" class="hero-btn hero-btn-outline" target="_blank" rel="noopener noreferrer">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                    Read the Docs
+                <a href="https://worker.asgrefinery.io" class="hero-btn hero-btn-outline" target="_blank" rel="noopener noreferrer">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14.5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    💰 Earn as a Worker
                 </a>
             </div>
+            <p class="hero-audience-note">Whether you need data labeled or want to earn — we've got you.</p>
             <div class="icon-row">
                 <span>Powered by</span>
                 <div class="icon-pill">
@@ -1392,29 +1550,45 @@
         <div class="section-container">
             <div class="section-header">
                 <span class="section-label">How It Works</span>
-                <h2>Four Steps to Quality Labels</h2>
-                <p>From API call to labeled dataset in minutes, not weeks.</p>
+                <h2>From raw data to verified labels in three steps</h2>
+                <p>Clear workflow, measurable quality, and transparent pricing from day one.</p>
             </div>
             <div class="steps-grid">
                 <div class="step-card" data-delay="0">
-                    <div class="step-number">1</div>
-                    <h4>Submit Tasks</h4>
-                    <p>Upload images via API or connect your S3/GCS bucket. Define label categories and quality requirements.</p>
+                    <div class="step-number">01</div>
+                    <div class="step-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 5 17 10"/>
+                            <line x1="12" y1="5" x2="12" y2="16"/>
+                        </svg>
+                    </div>
+                    <h4>Submit Your Data</h4>
+                    <p>Push tasks via REST API, Python SDK, or bulk upload from S3 and Google Cloud Storage. Define your labeling schema and let the platform handle distribution.</p>
                 </div>
                 <div class="step-card" data-delay="100">
-                    <div class="step-number">2</div>
-                    <h4>Workers Claim</h4>
-                    <p>Verified human workers are matched by language, skill, and availability. Tasks are claimed and labeled in real-time.</p>
+                    <div class="step-number">02</div>
+                    <div class="step-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="8" r="3"/>
+                            <circle cx="17" cy="10" r="3"/>
+                            <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/>
+                            <path d="M13 20c0-2.4 1.6-4.4 3.8-5.2"/>
+                        </svg>
+                    </div>
+                    <h4>Workers Label</h4>
+                    <p>A distributed workforce picks up tasks and applies labels. Each task is independently labeled by multiple workers to ensure quality.</p>
                 </div>
                 <div class="step-card" data-delay="200">
-                    <div class="step-number">3</div>
-                    <h4>Quality Checks</h4>
-                    <p>Multi-layer validation ensures accuracy. Consensus scoring, audit trails, and automatic requeue for disputed labels.</p>
-                </div>
-                <div class="step-card" data-delay="300">
-                    <div class="step-number">4</div>
-                    <h4>Get Results</h4>
-                    <p>Receive labeled data via webhook or poll the API. Workers are paid instantly via BSV micropayments.</p>
+                    <div class="step-number">03</div>
+                    <div class="step-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6l7-3z"/>
+                            <path d="M9 12l2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <h4>Consensus Delivers Results</h4>
+                    <p>2-of-3 agreement ensures accuracy. Results are delivered via webhook in real-time. Pay only for verified labels — starting at $0.04 each.</p>
                 </div>
             </div>
         </div>
@@ -1458,6 +1632,57 @@
                     <div class="feature-icon" style="background:rgba(20,184,166,0.1); color:#14b8a6">🤝</div>
                     <h4>Referral Partners</h4>
                     <p>Built-in referral system with configurable splits, cumulative caps, and automatic HandCash settlement. Grow your network.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="pricing-section">
+        <div class="section-container">
+            <div class="section-header reveal-up">
+                <span class="section-label">Pricing</span>
+                <h2>Simple, Transparent Pricing</h2>
+                <p>Pay per verified label. No subscriptions. No minimums.</p>
+            </div>
+            <div class="pricing-card reveal-scale">
+                <div class="pricing-amount">$0.04</div>
+                <p class="pricing-sub">per verified label</p>
+                <ul class="pricing-list">
+                    <li><span class="check">✓</span> 3-worker consensus (2-of-3 agreement)</li>
+                    <li><span class="check">✓</span> Real-time webhook delivery</li>
+                    <li><span class="check">✓</span> S3, GCS, and API ingestion</li>
+                    <li><span class="check">✓</span> Python SDK included</li>
+                    <li><span class="check">✓</span> BSV micropayment settlement</li>
+                </ul>
+                <p class="pricing-note">Need custom pricing for high-volume workloads? → <a href="mailto:admin@asgrefinery.io">Contact us</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- TRUST BADGES -->
+    <section class="trust-section">
+        <div class="section-container">
+            <div class="trust-grid reveal-up">
+                <div class="trust-badge">
+                    <p class="trust-title">🔒 AES-256 Encryption</p>
+                    <p class="trust-desc">Data encrypted at rest</p>
+                </div>
+                <div class="trust-badge">
+                    <p class="trust-title">🛡️ Security Scanned</p>
+                    <p class="trust-desc">gosec · govulncheck · Trivy · Semgrep</p>
+                </div>
+                <div class="trust-badge">
+                    <p class="trust-title">⛓️ BSV Blockchain</p>
+                    <p class="trust-desc">Transparent micropayment settlement</p>
+                </div>
+                <div class="trust-badge">
+                    <p class="trust-title">✅ CI/CD Pipeline</p>
+                    <p class="trust-desc">Automated testing on every commit</p>
+                </div>
+                <div class="trust-badge">
+                    <p class="trust-title">🔐 SOC 2 Aligned</p>
+                    <p class="trust-desc">Enterprise-grade security practices</p>
                 </div>
             </div>
         </div>
@@ -1567,8 +1792,17 @@ batch = client.tasks.create_batch(
                     <h3>ASG DATA REFINERY</h3>
                     <p>Enterprise-grade human data labeling powered by BSV micropayments. Built for developers who need quality labels at scale.</p>
                     <div class="footer-social">
-                        <a href="https://github.com/dbelay90-collab" target="_blank" rel="noopener noreferrer" aria-label="GitHub">GH</a>
-                        <a href="mailto:support@asgrefinery.io" aria-label="Email">✉</a>
+                        <a href="https://github.com/dbelay90-collab" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.93c.57.1.78-.25.78-.56l-.01-2.02c-3.2.7-3.87-1.55-3.87-1.55-.53-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.15.08 1.76 1.18 1.76 1.18 1.03 1.75 2.7 1.24 3.35.95.1-.74.4-1.24.73-1.53-2.56-.29-5.25-1.28-5.25-5.68 0-1.25.45-2.26 1.18-3.06-.12-.29-.52-1.45.11-3.03 0 0 .97-.31 3.17 1.17a11 11 0 0 1 5.77 0c2.2-1.48 3.17-1.17 3.17-1.17.63 1.58.23 2.74.11 3.03.74.8 1.18 1.81 1.18 3.06 0 4.41-2.7 5.39-5.28 5.67.41.36.78 1.05.78 2.12l-.01 3.14c0 .31.21.67.79.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+                        </a>
+                        <!-- TODO: replace with official ASG Data Refinery X profile when available -->
+                        <a href="https://x.com/asgrefinery" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.9 2H22l-6.77 7.75L23 22h-6.14l-4.8-6.27L6.56 22H3.45l7.24-8.28L1 2h6.29l4.33 5.73L18.9 2zm-1.08 18h1.7L6.38 3.9H4.56L17.82 20z"/></svg>
+                        </a>
+                        <!-- TODO: replace with official ASG Data Refinery LinkedIn profile when available -->
+                        <a href="https://linkedin.com/company/asg-refinery" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.49 6S0 4.88 0 3.5 1.11 1 2.49 1s2.49 1.12 2.49 2.5zM.44 8h4.1v14H.44V8zM8 8h3.93v1.91h.06c.55-1.04 1.9-2.14 3.92-2.14C20.1 7.77 21 10.45 21 13.9V22h-4.1v-7.19c0-1.72-.03-3.93-2.4-3.93-2.4 0-2.77 1.88-2.77 3.81V22H7.63V8H8z"/></svg>
+                        </a>
                     </div>
                 </div>
                 <div class="footer-col">
