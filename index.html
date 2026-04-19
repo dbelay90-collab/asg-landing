@@ -1623,6 +1623,7 @@
                 <div class="app-download-buttons">
                     <a href="https://github.com/dbelay90-collab/asg-releases/releases/download/v1.0.0/asg-worker-v1.0.0.apk"
                        class="download-btn download-btn-primary"
+                       id="apk-download-btn"
                        rel="noopener noreferrer">
                         📱 Download APK
                         <span class="download-size">v1.0.0</span>
@@ -2325,6 +2326,38 @@ batch = client.tasks.create_batch(
                 if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
+    </script>
+
+    <- GET /v1/waas/wallet/depositInfo ( was /v3/connect/profile/currentUserProfile APK download: platform-aware gate -->
+    <style>
+      .apk-toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);
+        background:#1a3a5c;color:#e0f0ff;padding:14px 28px;border-radius:12px;font-size:.95rem;
+        z-index:9999;pointer-events:none;opacity:0;transition:transform .35s ease,opacity .35s ease;
+        box-shadow:0 4px 20px rgba(0,0,0,.4);text-align:center;max-width:90vw}
+      .apk-toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+    </style>
+    <div class="apk-toast" id="apk-toast"></div>
+    <script>
+    (function(){
+      var btn=document.getElementById('apk-download-btn');
+      var isAndroid=/Android/i.test(navigator.userAgent);
+      if(isAndroid)return; // let it download normally on Android
+      btn.addEventListener('click',function(e){
+        e.preventDefault();
+        var url=btn.href;
+        navigator.clipboard.writeText(url).then(function(){
+          showToast('Link copied! Open on your Android device to install.');
+        }).catch(function(){
+          showToast('Copy this link on your Android device: '+url);
+        });
+      });
+      function showToast(msg){
+        var t=document.getElementById('apk-toast');
+        t.textContent=msg;
+        t.classList.add('show');
+        setTimeout(function(){t.classList.remove('show');},4000);
+      }
+    })();
     </script>
 </body>
 </html>
